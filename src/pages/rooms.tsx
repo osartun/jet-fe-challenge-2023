@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react"
-import { getRooms } from "../app/apiClient";
 import { navigate } from "gatsby";
 
+import { getRooms } from "../app/apiClient";
+import { useAppSelector } from "../app/store/hooks";
+
 const RoomsPage = () => {
+  const username = useAppSelector((state) => state.username.value);
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
@@ -18,7 +21,7 @@ const RoomsPage = () => {
 
   return (
     <div>
-      Welcome! Select a room from the list:
+      Welcome, {username}! Select a room from the list:
       <ul>
         {rooms.map((room, i) => (
           <li key={i}><a onClick={() => onSelectRoom(room)}>{room.name}</a></li>

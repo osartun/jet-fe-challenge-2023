@@ -1,12 +1,15 @@
-import React, { ChangeEventHandler, FormEventHandler, useState } from "react"
+import React, { ChangeEventHandler, FormEventHandler } from "react"
 import { login } from "../app/apiClient";
 import { navigate } from "gatsby";
+import { useAppDispatch, useAppSelector } from "../app/store/hooks";
+import { setUsername } from "../app/store/usernameSlice";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  const username = useAppSelector((state) => state.username.value);
+  const dispatch = useAppDispatch();
 
   const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setUsername(e.target.value);
+    dispatch(setUsername(e.target.value));
   }
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
