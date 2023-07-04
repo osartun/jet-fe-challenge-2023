@@ -24,6 +24,14 @@ export const connect = () => {
   socket.on("error", (err) => {
     console.error(err);
   });
+
+  socket.onAny((eventName, ...payload) => {
+    console.log(`➡️ Received '${eventName}' event with payload:`, ...payload);
+  });
+
+  socket.onAnyOutgoing((eventName, ...payload) => {
+    console.log(`⬅️ Sending '${eventName}' event with payload:`, ...payload);
+  });
 };
 
 export const login = (username: string) => {
@@ -33,11 +41,39 @@ export const login = (username: string) => {
 };
 
 export const joinRoom = (
-  room: string,
   username: string,
+  room: string,
   roomType: RoomType
 ) => {
   if (socket?.active) {
     socket.emit("joinRoom", { username, room, roomType });
+  }
+};
+
+export const letsPlay = () => {
+  if (socket?.active) {
+    socket.emit("letsPlay");
+  }
+};
+
+export const sendNumber = (
+  number: string,
+  selectedNumber: SelectableNumbers
+) => {
+  if (socket?.active) {
+    socket.emit("sendNumber", { number, selectedNumber });
+  }
+};
+
+export const on: EventListenerSignature = (
+  eventName: string,
+  listener: (...args: any[]) => void
+) => {
+  if (socket?.active) {
+    socket.on(eventName, listener);
+
+    return () => {
+      socket?.off(eventName);
+    };
   }
 };

@@ -1,11 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface State {
-  value: Room[];
+  list: Room[];
+  current: Room | null;
 }
 
 const initialState: State = {
-  value: [],
+  list: [],
+  current: null,
 };
 
 export const roomsSlice = createSlice({
@@ -13,11 +15,14 @@ export const roomsSlice = createSlice({
   initialState,
   reducers: {
     setRooms: (state, action: PayloadAction<Room[]>) => {
-      state.value = action.payload;
+      state.list = action.payload;
+    },
+    setCurrentRoom: (state, action: PayloadAction<Room>) => {
+      state.current = action.payload;
     },
   },
 });
 
-export const { setRooms } = roomsSlice.actions;
+export const { setRooms, setCurrentRoom } = roomsSlice.actions;
 
 export default roomsSlice.reducer;

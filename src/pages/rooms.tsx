@@ -1,35 +1,38 @@
-import React, { useEffect } from "react"
+import React, { useEffect } from "react";
 import { navigate } from "gatsby";
 
-import { getRooms } from "../app/apiClient";
-import { useAppDispatch, useAppSelector } from "../app/store/hooks";
-import { setRooms } from "../app/store/roomsSlice";
+import { useAppSelector } from "../app/store/hooks";
+import { joinRoom } from "../app/apiClient";
+import Layout from "../components/Layout";
+
+import * as styles from "./rooms.module.css";
 
 const RoomsPage = () => {
-  const username = useAppSelector((state) => state.username.value);
-  const rooms = useAppSelector((state) => state.rooms.value);
-  const dispatch = useAppDispatch();
+  const username = useAppSelector((state) => state.user.name);
+  const currentRoom = useAppSelector((state) => state.rooms.current);
 
   useEffect(() => {
-    getRooms().then((_rooms) => {
-      dispatch(setRooms(_rooms));
-    });
-  }, [])
+    if (!username) {
+      // Set username first
+      navigate("/");
+    }
+  }, [username]);
 
-  const onSelectRoom = (room: Room) => {
-    navigate('/game')
-  }
+  useEffect(() => {
+    if (currentRoom) {
+      joinRoom(username, currentRoom.name, currentRoom.type);
+      navigate('/game')
+    }
+  }, [username, currentRoom])
 
   return (
-    <div>
-      Welcome, {username}! Select a room from the list:
-      <ul>
-        {rooms.map((room, i) => (
-          <li key={i}><a onClick={() => onSelectRoom(room)}>{room.name}</a></li>
-        ))}
-      </ul>
-    </div>
-  )
-}
+    <Layout title="Select a room">
+      <div className={styles.wrapper}>
+        <p>Welcome, {username}!</p>
+        <p>← Please select a room</p>
+      </div>
+    </Layout>
+  );
+};
 
-export default RoomsPage
+export default RoomsPage;

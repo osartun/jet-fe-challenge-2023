@@ -1,16 +1,20 @@
-import React, { ChangeEventHandler, FormEventHandler } from "react";
-import { login } from "../app/apiClient";
+import React, { ChangeEventHandler, FormEventHandler, useEffect } from "react";
+import { connect, login, on } from "../app/apiClient";
 import { navigate } from "gatsby";
 
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
-import { setUsername } from "../app/store/usernameSlice";
+import { setUserId, setUsername } from "../app/store/userSlice";
 import Layout from "../components/Layout";
 
 import * as styles from "./index.module.css";
 
 const LoginPage = () => {
-  const username = useAppSelector((state) => state.username.value);
+  const username = useAppSelector((state) => state.user.name);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    connect();
+  }, [])
 
   const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     dispatch(setUsername(e.target.value));
@@ -19,11 +23,16 @@ const LoginPage = () => {
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     login(username);
+    on('message', (payload) => {
+      if (payload.socketId) {
+        dispatch(setUserId(payload.socketId));
+      }
+    })
     navigate("/rooms");
   };
 
   return (
-    <Layout title="Login">
+    <Layout title="Login" hideRooms>
       <div className={styles.wrapper}>
         <form onSubmit={onSubmit}>
           <label className={styles.label} htmlFor="username">Please enter your username:</label>

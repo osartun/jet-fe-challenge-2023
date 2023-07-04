@@ -2,12 +2,14 @@ import React, { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
 import { getRooms } from "../app/apiClient";
-import { setRooms } from "../app/store/roomsSlice";
+import { setCurrentRoom, setRooms } from "../app/store/roomsSlice";
 
 import * as styles from "./Rooms.module.css";
 
 const Rooms = () => {
-  const rooms = useAppSelector((state) => state.rooms.value);
+  const rooms = useAppSelector((state) => state.rooms.list);
+  const currentRoom = useAppSelector((state) => state.rooms.current);
+  const username = useAppSelector((state) => state.user.value);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -17,7 +19,7 @@ const Rooms = () => {
   }, []);
 
   const onSelectRoom = (room: Room) => {
-    console.log(room);
+    dispatch(setCurrentRoom(room));
   };
 
   return (
@@ -26,7 +28,13 @@ const Rooms = () => {
       <ul className={styles.list}>
         {rooms.map((room, i) => (
           <li className={styles.listItem} key={i}>
-            <button className={styles.room} onClick={() => onSelectRoom(room)}>{room.name}</button>
+            <button
+              className={styles.room}
+              aria-current={room.name === currentRoom?.name || undefined}
+              onClick={() => onSelectRoom(room)}
+            >
+              {room.name}
+            </button>
           </li>
         ))}
       </ul>
