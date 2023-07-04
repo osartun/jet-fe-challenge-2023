@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { navigate } from "gatsby";
 
 import { getRooms } from "../app/apiClient";
-import { useAppSelector } from "../app/store/hooks";
+import { useAppDispatch, useAppSelector } from "../app/store/hooks";
+import { setRooms } from "../app/store/roomsSlice";
 
 const RoomsPage = () => {
   const username = useAppSelector((state) => state.username.value);
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const rooms = useAppSelector((state) => state.rooms.value);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     getRooms().then((_rooms) => {
-      console.log(_rooms)
-      setRooms(_rooms)
+      dispatch(setRooms(_rooms));
     });
   }, [])
 
