@@ -3,25 +3,26 @@ import { navigate } from "gatsby";
 
 import { letsPlay, on, sendNumber } from "../app/apiClient";
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
-import { addTurn, setGameOver, setGameState } from "../app/store/turnsSlice";
+import { addTurn, setGameOver, setGameState } from "../app/store/gamePlaySlice";
 import Layout from "../components/Layout";
 import TurnList from "../components/TurnList";
+import GameOverOverlay from "../components/GameOverOverlay";
 
 import * as styles from "./game.module.css";
 
 const GamePage = () => {
   const currentRoom = useAppSelector((state) => state.rooms.current);
-  const listOfTurns = useAppSelector((state) => state.turns.list);
-  const gameState = useAppSelector((state) => state.turns.gameState);
-  const isOver = useAppSelector((state) => state.turns.isOver);
+  const listOfTurns = useAppSelector((state) => state.gamePlay.list);
+  const gameState = useAppSelector((state) => state.gamePlay.gameState);
+  const gameOver = useAppSelector((state) => state.gamePlay.gameOver);
   const dispatch = useAppDispatch();
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const scrollWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!currentRoom) {
-      navigate('/rooms');
+      navigate("/rooms");
     }
-  }, [currentRoom])
+  }, [currentRoom]);
 
   useEffect(() => {
     on("randomNumber", (payload) => {
@@ -31,18 +32,22 @@ const GamePage = () => {
       dispatch(setGameState(payload.state));
     });
     on("gameOver", (payload) => {
-      dispatch(setGameOver(payload.isOver));
+      dispatch(setGameOver(payload));
     });
   }, []);
 
   useEffect(() => {
-    const wrapper = wrapperRef.current;
+    const wrapper = scrollWrapperRef.current;
     if (wrapper) {
       requestAnimationFrame(() => {
-        wrapper.scrollTo(0, wrapper.scrollHeight)
-      })
+        if (window.innerWidth > 640) {
+          wrapper.scrollTo(0, wrapper.scrollHeight);
+        } else {
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
     }
-  }, [wrapperRef, listOfTurns, gameState]);
+  }, [scrollWrapperRef, listOfTurns, gameState]);
 
   const onSelectNumber = (selectedNumber: SelectableNumbers) => () => {
     const lastTurn = listOfTurns[listOfTurns.length - 1];
@@ -51,42 +56,45 @@ const GamePage = () => {
 
   return (
     <Layout title="Game">
-      <div className={styles.wrapper} ref={wrapperRef}>
-        <div className={styles.contentWrapper}>
-          {listOfTurns.length === 0 ? (
-            <div className={styles.letsPlayWrapper}>
-              <button className={styles.letsPlayButton} onClick={letsPlay}>
-                Let's Play
-              </button>
-            </div>
-          ) : null}
-          <TurnList turns={listOfTurns} />
-          {gameState === "wait" && listOfTurns.length > 0 ? (
-            <div>Waiting…</div>
-          ) : null}
-          {gameState === "play" && !isOver ? (
-            <div className={styles.numberButtonWrapper}>
-              <button
-                className={styles.numberButton}
-                onClick={onSelectNumber(-1)}
-              >
-                -1
-              </button>
-              <button
-                className={styles.numberButton}
-                onClick={onSelectNumber(0)}
-              >
-                0
-              </button>
-              <button
-                className={styles.numberButton}
-                onClick={onSelectNumber(1)}
-              >
-                1
-              </button>
-            </div>
-          ) : null}
+      <div className={styles.wrapper}>
+        <div className={styles.scrollWrapper} ref={scrollWrapperRef}>
+          <div className={styles.contentWrapper}>
+            {listOfTurns.length === 0 ? (
+              <div className={styles.letsPlayWrapper}>
+                <button className={styles.letsPlayButton} onClick={letsPlay}>
+                  Let's Play
+                </button>
+              </div>
+            ) : null}
+            <TurnList turns={listOfTurns} />
+            {gameState === "wait" && listOfTurns.length > 0 ? (
+              <div>Waiting…</div>
+            ) : null}
+            {gameState === "play" && !gameOver?.isOver ? (
+              <div className={styles.numberButtonWrapper}>
+                <button
+                  className={styles.numberButton}
+                  onClick={onSelectNumber(-1)}
+                >
+                  -1
+                </button>
+                <button
+                  className={styles.numberButton}
+                  onClick={onSelectNumber(0)}
+                >
+                  0
+                </button>
+                <button
+                  className={styles.numberButton}
+                  onClick={onSelectNumber(1)}
+                >
+                  1
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
+        <GameOverOverlay />
       </div>
     </Layout>
   );

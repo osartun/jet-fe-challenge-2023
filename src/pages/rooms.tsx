@@ -29,7 +29,7 @@ const RoomsPage = () => {
     <Layout title="Select a room">
       <div className={styles.wrapper}>
         <p>Welcome, {username}!</p>
-        <p>← Please select a room</p>
+        <p className={styles.instruction}>Please select a room</p>
       </div>
     </Layout>
   );

@@ -24,6 +24,11 @@ type Turn =
 
 type GameState = "play" | "wait";
 
+interface GameOver {
+  user: "cpu" | string;
+  isOver: boolean;
+}
+
 type RandomNumberPayload = Turn;
 
 type ActivateYourTurnPayload = {
@@ -38,10 +43,7 @@ type MessagePayload = {
   room?: string;
 };
 
-type GameOverPayload = {
-  user: "cpu" | string;
-  isOver: boolean;
-};
+type GameOverPayload = GameOver;
 
 type EventListenerSignature = {
   (eventName: "message", listener: (pl: MessagePayload) => void): void;

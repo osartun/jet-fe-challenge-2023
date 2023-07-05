@@ -1,3 +1,13 @@
 .wrapper {
   padding: 32px 16px;
 }
+
+.instruction::before {
+  content: "↑ ";
+}
+
+@media (min-width: 640px) {
+  .instruction::before {
+    content: "← ";
+  }
+}

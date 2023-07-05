@@ -2,13 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import userReducer from "./userSlice";
 import roomsReducer from "./roomsSlice";
-import turnsReducer from "./turnsSlice";
+import gamePlayReducer from "./gamePlaySlice";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     rooms: roomsReducer,
-    turns: turnsReducer,
+    gamePlay: gamePlayReducer,
   },
 });
 
