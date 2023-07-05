@@ -1,0 +1,71 @@
+.root {
+  display: flex;
+}
+
+.root[data-current-user="true"] {
+  flex-direction: row-reverse;
+}
+
+.playerIconPlaceholder {
+  width: 40px;
+  height: 40px;
+}
+
+.playerIcon {
+  width: 40px;
+  height: 40px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px;
+}
+
+.content[data-is-first="true"] {
+  flex-grow: 1;
+  align-items: center;
+}
+
+.selectedNumber {
+  --size: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #205A6D;
+  color: #FFFFFF;
+  width: var(--size);
+  height: var(--size);
+  border-radius: calc(var(--size) / 2);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+}
+
+.root[data-current-user="true"] .selectedNumber {
+  align-self: flex-end;
+}
+
+.calculation,
+.number {
+  flex-grow: 1;
+  margin: 8px 0;
+  padding: 8px 16px;
+  background: #F8F5F2;
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.calculation[data-is-correct="true"] {
+  color: #206d2f;
+}
+
+.calculation[data-is-correct="false"] {
+  color: #6d2020;
+}
+
+.root[data-current-user="true"] .calculation,
+.root[data-current-user="true"] .number {
+  text-align: right;
+}

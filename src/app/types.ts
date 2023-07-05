@@ -18,7 +18,7 @@ type Turn =
       number: string;
       isFirst: false;
       selectedNumber: SelectableNumbers;
-      user: string;
+      user: "CPU" | string;
       isCorrectResult: boolean;
     };
 

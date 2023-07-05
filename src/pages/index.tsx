@@ -3,7 +3,7 @@ import { connect, login, on } from "../app/apiClient";
 import { navigate } from "gatsby";
 
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
-import { setUserId, setUsername } from "../app/store/userSlice";
+import { setUsername } from "../app/store/userSlice";
 import Layout from "../components/Layout";
 
 import * as styles from "./index.module.css";
@@ -23,11 +23,6 @@ const LoginPage = () => {
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     login(username);
-    on('message', (payload) => {
-      if (payload.socketId) {
-        dispatch(setUserId(payload.socketId));
-      }
-    })
     navigate("/rooms");
   };
 
