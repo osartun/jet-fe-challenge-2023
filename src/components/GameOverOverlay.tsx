@@ -2,7 +2,7 @@ import React from "react";
 
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
 import { reset } from "../app/store/gamePlaySlice";
-import { letsPlay } from "../app/apiClient";
+import GameController from "../app/GameController";
 import WinImg from "../images/win.png";
 import LoseImg from "../images/lose.png";
 
@@ -21,7 +21,7 @@ const GameOverOverlay = () => {
 
   const onNewGameClick = () => {
     dispatch(reset());
-    letsPlay();
+    GameController.letsPlay();
   };
 
   return (

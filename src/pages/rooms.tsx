@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { HeadFC, navigate } from "gatsby";
 
 import { useAppSelector } from "../app/store/hooks";
-import { joinRoom } from "../app/apiClient";
 import Layout from "../components/Layout";
 
 import * as styles from "./rooms.module.css";
@@ -20,10 +19,9 @@ const RoomsPage = () => {
 
   useEffect(() => {
     if (currentRoom) {
-      joinRoom(username, currentRoom.name, currentRoom.type);
-      navigate('/game')
+      navigate("/game");
     }
-  }, [username, currentRoom])
+  }, [username, currentRoom]);
 
   return (
     <Layout title="Select a room">
@@ -37,4 +35,4 @@ const RoomsPage = () => {
 
 export default RoomsPage;
 
-export const Head: HeadFC = () => <title>Choose room – Game of Three</title>
+export const Head: HeadFC = () => <title>Choose room – Game of Three</title>;

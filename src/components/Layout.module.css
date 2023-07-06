@@ -16,6 +16,9 @@
 }
 
 .header {
+  font-size: 18px;
+  line-height: 20px;
+  font-weight: 700;
   background: #ff8000;
   color: #FFFFFF;
   padding: 16px;

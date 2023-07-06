@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import Turn from "./Turn";
-import * as styles from './TurnList.module.css'
+import * as styles from "./TurnList.module.css";
 
 const TurnList: FC<{ turns: Turn[] }> = ({ turns }) => {
   return (

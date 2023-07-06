@@ -20,9 +20,6 @@ export const gamePlaySlice = createSlice({
       state.gameState = action.payload;
     },
     addTurn: (state, action: PayloadAction<Turn>) => {
-      if (action.payload.isFirst) {
-        state.gameState = "play";
-      }
       state.list = [...state.list, action.payload];
     },
     setGameOver: (state, action: PayloadAction<GameOver>) => {

@@ -13,67 +13,37 @@ export const getUsers = async (filter?: Partial<User>) => {
   return response.json() as Promise<User[]>;
 };
 
-export const connect = () => {
-  if (socket?.active) {
-    return;
-  }
+export const connect = () =>
+  new Promise<void>((resolve) => {
+    if (socket?.active) {
+      return resolve();
+    }
 
-  socket = io("ws://localhost:8082", {
-    transports: ["websocket"],
-    closeOnBeforeunload: true,
+    socket = io("ws://localhost:8082", {
+      transports: ["websocket"],
+      closeOnBeforeunload: true,
+    }).on("connect", resolve);
+
+    socket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
+
+    socket.on("error", (err) => {
+      console.error(err);
+    });
+
+    socket.onAny((eventName, ...payload) => {
+      console.log(`➡️ Received '${eventName}' event with payload:`, ...payload);
+    });
+
+    socket.onAnyOutgoing((eventName, ...payload) => {
+      console.log(`⬅️ Sending '${eventName}' event with payload:`, ...payload);
+    });
   });
 
-  socket.on("connect_error", (err) => {
-    console.log(`connect_error due to ${err.message}`);
-  });
-
-  socket.on("error", (err) => {
-    console.error(err);
-  });
-
-  socket.onAny((eventName, ...payload) => {
-    console.log(`➡️ Received '${eventName}' event with payload:`, ...payload);
-  });
-
-  socket.onAnyOutgoing((eventName, ...payload) => {
-    console.log(`⬅️ Sending '${eventName}' event with payload:`, ...payload);
-  });
-};
-
-export const login = (username: string) => {
+export const emit: EventEmitterSignature = (eventName, ...args: any[]) => {
   if (socket?.active) {
-    socket.emit("login", { username });
-  }
-};
-
-export const joinRoom = (
-  username: string,
-  room: string,
-  roomType: RoomType
-) => {
-  if (socket?.active) {
-    socket.emit("joinRoom", { username, room, roomType });
-  }
-};
-
-export const leaveRoom = () => {
-  if (socket?.active) {
-    socket.emit("leaveRoom");
-  }
-};
-
-export const letsPlay = () => {
-  if (socket?.active) {
-    socket.emit("letsPlay");
-  }
-};
-
-export const sendNumber = (
-  number: string,
-  selectedNumber: SelectableNumbers
-) => {
-  if (socket?.active) {
-    socket.emit("sendNumber", { number, selectedNumber });
+    socket.emit(eventName, ...args);
   }
 };
 

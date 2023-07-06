@@ -36,6 +36,27 @@ interface GameOver {
   isOver: boolean;
 }
 
+type EventEmitterSignature = {
+  (eventName: "login", payload: { username: string }): void;
+  (
+    eventName: "joinRoom",
+    payload: {
+      username: string;
+      room: string;
+      roomType: RoomType;
+    }
+  ): void;
+  (eventName: "leaveRoom"): void;
+  (eventName: "letsPlay"): void;
+  (
+    eventName: "sendNumber",
+    payload: {
+      number: string;
+      selectedNumber: SelectableNumbers;
+    }
+  ): void;
+};
+
 type RandomNumberPayload = Turn;
 
 type ActivateYourTurnPayload = {
@@ -50,6 +71,10 @@ type MessagePayload = {
   room?: string;
 };
 
+type OnReadyPayload = {
+  state: boolean;
+};
+
 type GameOverPayload = GameOver;
 
 type EventListenerUnmountFn = () => void;
@@ -58,6 +83,10 @@ type EventListenerSignature = {
   (
     eventName: "message",
     listener: (pl: MessagePayload) => void
+  ): EventListenerUnmountFn;
+  (
+    eventName: "onReady",
+    listener: (pl: OnReadyPayload) => void
   ): EventListenerUnmountFn;
   (
     eventName: "randomNumber",

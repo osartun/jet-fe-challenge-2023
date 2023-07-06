@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { HeadFC, navigate } from "gatsby";
 
-import { letsPlay, on, sendNumber } from "../app/apiClient";
-import { useAppDispatch, useAppSelector } from "../app/store/hooks";
-import { addTurn, setGameOver, setGameState } from "../app/store/gamePlaySlice";
+import { useAppSelector } from "../app/store/hooks";
+import GameController from "../app/GameController";
 import Layout from "../components/Layout";
 import GameHeader from "../components/GameHeader";
 import TurnList from "../components/TurnList";
@@ -16,7 +15,6 @@ const GamePage = () => {
   const listOfTurns = useAppSelector((state) => state.gamePlay.list);
   const gameState = useAppSelector((state) => state.gamePlay.gameState);
   const gameOver = useAppSelector((state) => state.gamePlay.gameOver);
-  const dispatch = useAppDispatch();
   const scrollWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,20 +24,9 @@ const GamePage = () => {
   }, [currentRoom]);
 
   useEffect(() => {
-    on("randomNumber", (payload) => {
-      dispatch(addTurn(payload));
-    });
-    on("activateYourTurn", (payload) => {
-      dispatch(setGameState(payload.state));
-    });
-    on("gameOver", (payload) => {
-      dispatch(setGameOver(payload));
-    });
-  }, []);
-
-  useEffect(() => {
     const wrapper = scrollWrapperRef.current;
     if (wrapper) {
+      // Make sure the viewport is always scrolled to the bottom
       requestAnimationFrame(() => {
         if (window.innerWidth > 640) {
           wrapper.scrollTo(0, wrapper.scrollHeight);
@@ -52,7 +39,7 @@ const GamePage = () => {
 
   const onSelectNumber = (selectedNumber: SelectableNumbers) => () => {
     const lastTurn = listOfTurns[listOfTurns.length - 1];
-    sendNumber(lastTurn.number, selectedNumber);
+    GameController.sendNumber(lastTurn.number, selectedNumber);
   };
 
   return (
@@ -60,18 +47,23 @@ const GamePage = () => {
       <div className={styles.wrapper}>
         <div className={styles.scrollWrapper} ref={scrollWrapperRef}>
           <div className={styles.contentWrapper}>
-            {listOfTurns.length === 0 ? (
+            {gameState === "play" && listOfTurns.length === 0 ? (
               <div className={styles.letsPlayWrapper}>
-                <button className={styles.letsPlayButton} onClick={letsPlay}>
+                <button
+                  className={styles.letsPlayButton}
+                  onClick={GameController.letsPlay}
+                >
                   Let's Play
                 </button>
               </div>
             ) : null}
             <TurnList turns={listOfTurns} />
-            {gameState === "wait" && listOfTurns.length > 0 ? (
+            {gameState === "wait" && !gameOver?.isOver ? (
               <div className={styles.waiting}>Waiting…</div>
             ) : null}
-            {gameState === "play" && !gameOver?.isOver ? (
+            {gameState === "play" &&
+            listOfTurns.length > 0 &&
+            !gameOver?.isOver ? (
               <div className={styles.numberButtonWrapper}>
                 <button
                   className={styles.numberButton}
@@ -103,4 +95,4 @@ const GamePage = () => {
 
 export default GamePage;
 
-export const Head: HeadFC = () => <title>Game of Three</title>
+export const Head: HeadFC = () => <title>Game of Three</title>;
