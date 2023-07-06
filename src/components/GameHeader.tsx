@@ -22,9 +22,8 @@ const GameHeader = () => {
         try {
           const users = await getUsers({ room: currentRoom.name })
           const player = users.find((user) => user.name !== username)
-          if (player) {
-            setOpposingPlayer(player.name);
-          } else {
+          setOpposingPlayer(player?.name ?? '');
+          if (!player) {
             const unmountListener = on('message', () => {
               fetchOpposingPlayer()
               unmountListener();
@@ -35,6 +34,8 @@ const GameHeader = () => {
         }
       }
       fetchOpposingPlayer();
+
+      return on('listTrigger', fetchOpposingPlayer)
     }
   }, [currentRoom]);
 

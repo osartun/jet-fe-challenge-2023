@@ -71,4 +71,8 @@ type EventListenerSignature = {
     eventName: "gameOver",
     listener: (pl: GameOverPayload) => void
   ): EventListenerUnmountFn;
+  (
+    eventName: "listTrigger",
+    listener: (pl: boolean) => void
+  ): EventListenerUnmountFn;
 };
