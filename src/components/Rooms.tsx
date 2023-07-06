@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
-import { getRooms } from "../app/apiClient";
+import { getRooms, leaveRoom } from "../app/apiClient";
 import { setCurrentRoom, setRooms } from "../app/store/roomsSlice";
+import { reset } from "../app/store/gamePlaySlice";
 
 import * as styles from "./Rooms.module.css";
 
 const Rooms = () => {
   const rooms = useAppSelector((state) => state.rooms.list);
   const currentRoom = useAppSelector((state) => state.rooms.current);
-  const username = useAppSelector((state) => state.user.value);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -19,6 +19,10 @@ const Rooms = () => {
   }, []);
 
   const onSelectRoom = (room: Room) => {
+    if (currentRoom) {
+      leaveRoom();
+      dispatch(reset())
+    }
     dispatch(setCurrentRoom(room));
   };
 

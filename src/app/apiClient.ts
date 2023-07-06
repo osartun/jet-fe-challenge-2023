@@ -50,6 +50,12 @@ export const joinRoom = (
   }
 };
 
+export const leaveRoom = () => {
+  if (socket?.active) {
+    socket.emit("leaveRoom");
+  }
+};
+
 export const letsPlay = () => {
   if (socket?.active) {
     socket.emit("letsPlay");
