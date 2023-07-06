@@ -22,7 +22,7 @@ export const connect = () =>
     socket = io("ws://localhost:8082", {
       transports: ["websocket"],
       closeOnBeforeunload: true,
-    }).on("connect", resolve);
+    }).once("connect", resolve);
 
     socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
