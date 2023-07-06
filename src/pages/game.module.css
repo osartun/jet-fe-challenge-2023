@@ -40,6 +40,24 @@
   cursor: pointer;
 }
 
+@keyframes pulse {
+  from {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.waiting {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  padding-left: 54px;
+  animation: pulse 1.2s alternate linear infinite;
+}
+
 .numberButtonWrapper {
   display: flex;
   justify-content: center;

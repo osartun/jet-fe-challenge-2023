@@ -68,7 +68,7 @@ const GamePage = () => {
             ) : null}
             <TurnList turns={listOfTurns} />
             {gameState === "wait" && listOfTurns.length > 0 ? (
-              <div>Waiting…</div>
+              <div className={styles.waiting}>Waiting…</div>
             ) : null}
             {gameState === "play" && !gameOver?.isOver ? (
               <div className={styles.numberButtonWrapper}>
