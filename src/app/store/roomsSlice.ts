@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-interface State {
+export interface RoomsState {
   list: Room[];
   current: Room | null;
 }
 
-const initialState: State = {
+const initialState: RoomsState = {
   list: [],
   current: null,
 };

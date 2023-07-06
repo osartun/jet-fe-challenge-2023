@@ -1,3 +1,5 @@
+import { wait } from "../utility/async";
+
 import { connect, emit, getRooms, getUsers, on } from "./apiClient";
 import store from "./store";
 import {
@@ -10,7 +12,8 @@ import { setIsConnected } from "./store/onlineSlice";
 import { setCurrentRoom, setRooms } from "./store/roomsSlice";
 
 /**
- * This module initializes the API Client and translates the incoming events into the global state.
+ * This module initializes the API Client and handles all API calls. It also translates incoming
+ * events into the global store.
  */
 class GameController {
   listeners: EventListenerUnmountFn[] = [];
@@ -98,22 +101,24 @@ class GameController {
     };
   };
 
-  joinRoom = (newRoom: Room) => {
+  joinRoom = async (newRoom: Room) => {
     const currentState = store.getState();
-    if (currentState.rooms.current) {
-      emit("leaveRoom");
-      store.dispatch(reset());
-      // A bit hacky, but wait briefly before joining the next room
-      setTimeout(() => {
-        emit("joinRoom", {
-          username: currentState.user.name,
-          room: newRoom.name,
-          roomType: newRoom.type,
-        });
-      }, 100);
-      store.dispatch(setCurrentRoom(newRoom));
+    if (newRoom.name === currentState.rooms.current?.name) {
+      // Already here.
       return;
     }
+    if (!currentState.rooms.current) {
+      emit("joinRoom", {
+        username: currentState.user.name,
+        room: newRoom.name,
+        roomType: newRoom.type,
+      });
+      store.dispatch(setCurrentRoom(newRoom));
+    }
+    emit("leaveRoom");
+    store.dispatch(reset());
+    // A bit hacky, but wait briefly before joining the next room
+    await wait(100);
     emit("joinRoom", {
       username: currentState.user.name,
       room: newRoom.name,

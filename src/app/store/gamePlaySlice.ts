@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-interface State {
+export interface GamePlayState {
   gameState: GameState;
   list: Turn[];
   gameOver: GameOver | null;
 }
 
-const initialState: State = {
+const initialState: GamePlayState = {
   gameState: "wait",
   list: [],
   gameOver: null,
