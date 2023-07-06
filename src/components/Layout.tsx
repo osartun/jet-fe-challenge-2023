@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from "react";
+import React, { FC, PropsWithChildren, ReactNode } from "react";
 
 import footerImg from "../images/JET-Logo-White-Primary-Hor-RGB.png";
 
@@ -6,7 +6,7 @@ import Rooms from "./Rooms";
 import * as styles from "./Layout.module.css";
 
 interface Props {
-  title: string;
+  title: ReactNode;
   hideRooms?: boolean;
 }
 

@@ -7,6 +7,12 @@ export const getRooms = async () => {
   return response.json() as Promise<Room[]>;
 };
 
+export const getUsers = async (filter?: Partial<User>) => {
+  const queryString = new URLSearchParams(filter);
+  const response = await fetch(`http://localhost:3004/users?${queryString}`);
+  return response.json() as Promise<User[]>;
+};
+
 export const connect = () => {
   if (socket?.active) {
     return;
@@ -82,4 +88,5 @@ export const on: EventListenerSignature = (
       socket?.off(eventName);
     };
   }
+  return () => {};
 };

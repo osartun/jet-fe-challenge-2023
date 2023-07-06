@@ -7,6 +7,13 @@ interface Room {
   type: RoomType;
 }
 
+interface User {
+  id: string;
+  name: string;
+  room: string;
+  roomType: "cpu" | "human";
+}
+
 type SelectableNumbers = -1 | 0 | 1;
 
 type Turn =
@@ -45,15 +52,23 @@ type MessagePayload = {
 
 type GameOverPayload = GameOver;
 
+type EventListenerUnmountFn = () => void;
+
 type EventListenerSignature = {
-  (eventName: "message", listener: (pl: MessagePayload) => void): void;
+  (
+    eventName: "message",
+    listener: (pl: MessagePayload) => void
+  ): EventListenerUnmountFn;
   (
     eventName: "randomNumber",
     listener: (pl: RandomNumberPayload) => void
-  ): void;
+  ): EventListenerUnmountFn;
   (
     eventName: "activateYourTurn",
     listener: (pl: ActivateYourTurnPayload) => void
-  ): void;
-  (eventName: "gameOver", listener: (pl: GameOverPayload) => void): void;
+  ): EventListenerUnmountFn;
+  (
+    eventName: "gameOver",
+    listener: (pl: GameOverPayload) => void
+  ): EventListenerUnmountFn;
 };

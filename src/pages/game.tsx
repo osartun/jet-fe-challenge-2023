@@ -5,6 +5,7 @@ import { letsPlay, on, sendNumber } from "../app/apiClient";
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
 import { addTurn, setGameOver, setGameState } from "../app/store/gamePlaySlice";
 import Layout from "../components/Layout";
+import GameHeader from "../components/GameHeader";
 import TurnList from "../components/TurnList";
 import GameOverOverlay from "../components/GameOverOverlay";
 
@@ -55,7 +56,7 @@ const GamePage = () => {
   };
 
   return (
-    <Layout title="Game">
+    <Layout title={<GameHeader />}>
       <div className={styles.wrapper}>
         <div className={styles.scrollWrapper} ref={scrollWrapperRef}>
           <div className={styles.contentWrapper}>

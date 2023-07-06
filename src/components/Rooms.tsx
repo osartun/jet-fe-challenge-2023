@@ -15,7 +15,10 @@ const Rooms = () => {
   useEffect(() => {
     getRooms().then((_rooms) => {
       dispatch(setRooms(_rooms));
-    });
+    }).catch((e) => {
+      console.log(e);
+      alert('Unfortunately, an error occurred while fetching the list of rooms');
+    })
   }, []);
 
   const onSelectRoom = (room: Room) => {
