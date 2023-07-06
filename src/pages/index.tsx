@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler, FormEventHandler, useEffect } from "react";
-import { connect, login, on } from "../app/apiClient";
-import { navigate } from "gatsby";
+import { connect, login } from "../app/apiClient";
+import { HeadFC, navigate } from "gatsby";
 
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
 import { setUsername } from "../app/store/userSlice";
@@ -46,3 +46,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+export const Head: HeadFC = () => <title>Login – Game of Three</title>

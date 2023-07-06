@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { navigate } from "gatsby";
+import { HeadFC, navigate } from "gatsby";
 
 import { letsPlay, on, sendNumber } from "../app/apiClient";
 import { useAppDispatch, useAppSelector } from "../app/store/hooks";
@@ -102,3 +102,5 @@ const GamePage = () => {
 };
 
 export default GamePage;
+
+export const Head: HeadFC = () => <title>Game of Three</title>
