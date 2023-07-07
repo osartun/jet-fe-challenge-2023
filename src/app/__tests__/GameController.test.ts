@@ -1,8 +1,8 @@
-import GameController from "../app/GameController";
-import * as APIClient from "../app/apiClient";
-import store from "../app/store";
-import { GamePlayState } from "../app/store/gamePlaySlice";
-import { RoomsState } from "../app/store/roomsSlice";
+import GameController from "../GameController";
+import * as APIClient from "../apiClient";
+import store from "../store";
+import { GamePlayState } from "../store/gamePlaySlice";
+import { RoomsState } from "../store/roomsSlice";
 
 const baseUserMock: User = {
   id: "__USER_ID__",
@@ -131,6 +131,62 @@ describe("app", () => {
         expect(cb).toHaveBeenLastCalledWith("");
 
         unmount();
+      });
+    });
+
+    describe("joinRoom", () => {
+      beforeEach(() => {
+        jest.useFakeTimers();
+      });
+
+      afterEach(() => {
+        jest.useRealTimers();
+      });
+
+      it("emits joinRoom if there is no current room", async () => {
+        jest.spyOn(store, "getState").mockReturnValue({
+          ...baseStoreState,
+          rooms: {
+            ...baseRoomsStoreMock,
+            current: null,
+          },
+        });
+        jest.spyOn(APIClient, "emit");
+
+        const promise = GameController.joinRoom({ ...baseRoomMock });
+        jest.runAllTimers();
+        await promise;
+
+        expect(APIClient.emit).toHaveBeenCalledWith("joinRoom", {
+          username: "__USERNAME__",
+          room: "__ROOM_NAME__",
+          roomType: "cpu",
+        });
+      });
+
+      it("emits leaveRoom and then joinRoom if there is a current room", async () => {
+        jest.spyOn(store, "getState").mockReturnValue({
+          ...baseStoreState,
+          rooms: {
+            ...baseRoomsStoreMock,
+            current: { ...baseRoomMock },
+          },
+        });
+        jest.spyOn(APIClient, "emit");
+
+        const promise = GameController.joinRoom({
+          ...baseRoomMock,
+          name: "__NEW_ROOM__",
+        });
+        jest.runAllTimers();
+        await promise;
+
+        expect(APIClient.emit).toHaveBeenCalledWith("leaveRoom");
+        expect(APIClient.emit).toHaveBeenCalledWith("joinRoom", {
+          username: "__USERNAME__",
+          room: "__NEW_ROOM__",
+          roomType: "cpu",
+        });
       });
     });
   });
