@@ -3,13 +3,17 @@ import { Socket, io } from "socket.io-client";
 let socket: Socket | null = null;
 
 export const getRooms = async () => {
-  const response = await fetch("http://localhost:3004/rooms");
+  const response = await fetch(
+    `${process.env.GATSBY_API_BASE_JSON_SERVER}/rooms`
+  );
   return response.json() as Promise<Room[]>;
 };
 
 export const getUsers = async (filter?: Partial<User>) => {
   const queryString = new URLSearchParams(filter);
-  const response = await fetch(`http://localhost:3004/users?${queryString}`);
+  const response = await fetch(
+    `${process.env.GATSBY_API_BASE_JSON_SERVER}/users?${queryString}`
+  );
   return response.json() as Promise<User[]>;
 };
 
@@ -19,10 +23,14 @@ export const connect = () =>
       return resolve();
     }
 
-    socket = io("ws://localhost:8082", {
+    socket = io(`${process.env.GATSBY_API_BASE_WS_SERVER}`, {
       transports: ["websocket"],
       closeOnBeforeunload: true,
     }).once("connect", resolve);
+
+    if (process.env.NODE_ENV !== "development") {
+      return;
+    }
 
     socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
