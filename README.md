@@ -32,7 +32,7 @@ https://github.com/osartun/jet-fe-challenge-2023/assets/1381730/e0d7fd05-2ff8-4b
 1. Create a build and serve it with `npm run build && npm run serve`. Alternatively, start a dev server with `npm run develop`
 1. Navigate to the URLs posted in the logs (http://localhost:9000/ or http://localhost:8000/)
 
-## Run tests
+### Run tests
 
 1. Follow the _Client side_ steps to set up the project. However, it's not mandatory to create a build or start the server for the tests to run
 1. Run `npm run test`
