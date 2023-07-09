@@ -2,7 +2,7 @@
 
 ## Demo
 
-https://github.com/osartun/jet-fe-challenge-2023/assets/1381730/e0d7fd05-2ff8-4b62-bdb6-b325e1e14a17
+https://github.com/osartun/jet-fe-challenge-2023/assets/1381730/c8939769-2e99-4753-bc6b-864ebe18ae8a
 
 ## Notes
 
